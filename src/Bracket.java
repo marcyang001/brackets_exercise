@@ -51,7 +51,7 @@ public class Bracket {
     public boolean isValidBracketInput(String inputBraces) {
 
         String currentBrace;    // variable that keeps track of each character from the input as we iterate
-        String openBrace; // variable that keeps track of the open braces inside the stack
+        String topOpenBrace; // variable that keeps track of the open braces on top of the stack
         String startingChar; // variable that keeps track of the starting point, either (, [ or {
         Stack<String> stack = new Stack<>(); // keep track of the number of open brackets == number of closing brackets
         Stack<String> squareStack = new Stack<>(); // keep track of which bracket is inserted inside the square bracket
@@ -83,26 +83,28 @@ public class Bracket {
                 if (openBraces.contains(currentBrace)) {
 
                     if (!stack.empty()) {
-                        openBrace = stack.peek();
+                        topOpenBrace = stack.peek();
                         // Inside parenthesis () only braces {} are allowed
-                        if (openBrace.equals("(") && !currentBrace.equals("{")) {
+                        if (topOpenBrace.equals("(") && !currentBrace.equals("{")) {
                             return false;
                         }
                         // Inside braces {} only square brackets [] are allowed
-                        else if (openBrace.equals("{") && !currentBrace.equals("[")) {
+                        else if (topOpenBrace.equals("{") && !currentBrace.equals("[")) {
                             return false;
                         }
-                        else if (openBrace.equals("[") && !squareStack.empty()) {
-
+                        else if (topOpenBrace.equals("[") && !squareStack.empty()) {
+                            // if the most recent open bracket is [, and the squareStack is not empty
+                            // check if the currentBrace is equal to the one on top of square Stack
+                            // case handler for [(){}] --> invalid => return false
                             if (!(currentBrace.equals(squareStack.peek()))) {
                                 return false;
                             }
 
                         }
-                        else if (openBrace.equals("[") && squareStack.empty()) {
+                        else if (topOpenBrace.equals("[") && squareStack.empty()) {
                             // insert an open square bracket in to squareStack because,
                             // the program will remove it when encountering its corresponding closing square bracket
-
+                            // case handler for [[][]]
                             squareStack.push("[");
                             if (!(currentBrace.equals(squareStack.peek()))) {
                                 return false;
@@ -124,26 +126,26 @@ public class Bracket {
                 else if (closeBraces.contains(currentBrace)) {
 
                     if (!stack.empty()){
-                        openBrace = stack.pop();
+                        topOpenBrace = stack.pop();
                         // You can only close the last bracket that was opened
                         // valid: ()
                         // invalid: (]
-                        if (openBrace.equals("(") && !currentBrace.equals(")")) {
+                        if (topOpenBrace.equals("(") && !currentBrace.equals(")")) {
                             return false;
                         }
                         // valid: {}
                         // invalid: {]
-                        else if (openBrace.equals("{") && !currentBrace.equals("}")) {
+                        else if (topOpenBrace.equals("{") && !currentBrace.equals("}")) {
                             return false;
                         }
 
                         // valid: []
                         // invalid: [}
-                        else if (openBrace.equals("[") && !currentBrace.equals("]")) {
+                        else if (topOpenBrace.equals("[") && !currentBrace.equals("]")) {
                             return false;
                         }
-                        else if (openBrace.equals("[") && currentBrace.equals("]") && !squareStack.empty()) {
-                            // pop the square stack
+                        // for every close square bracket, pop an element from the squareStack
+                        else if (topOpenBrace.equals("[") && currentBrace.equals("]") && !squareStack.empty()) {
                             squareStack.pop();
                         }
                     }
@@ -162,12 +164,13 @@ public class Bracket {
                 index++;
             }
 
-
+            // handle : {, ({
             if (!stack.empty()) {
                 return false;
             }
 
         }
+        // return false if the input does not start with an open bracket
         else {
             return false;
         }

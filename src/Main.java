@@ -20,13 +20,13 @@ public class Main {
     public static void main(String[] args) {
 
 /*        Part0*/
-//        RunSimpleTests();
+        RunSimpleTests();
 //
 /*        Part 1*/
 //        PartIOfTheProgram(args);
 //
 /*        Part 2*/
-        partIIOfTheProgram(args);
+//        partIIOfTheProgram(args);
 
 
     }
@@ -36,7 +36,7 @@ public class Main {
 
         String[] goodTestCases = {"()", "[]", "{}", "({})", "({}{})","{[]}", "{[][][]}" ,"[()]", "[{}]", "[[]]", "[[[]]]", "[()()]", "{[][()()]}", "()()", "[][]", "[[()][{}]]"};
 
-        String[] badTestCases = { "(()", "{}}", "({)}", "[d]", "", "([])", "({}())" ,"(())", "{{}}", "{()}","{[]{}[]}", "[([])]", ")", "())", "[}}", "}", "[[]{}()[][]]","[[][{}]{}[][]]", "[(){}]", "(){}"};
+        String[] badTestCases = { "{","({" , "(()", "{}}", "({)}", "[d]", "", "([])", "({}())" ,"(())", "{{}}", "{()}","{[]{}[]}", "[([])]", ")", "())", "[}}", "}", "[[]{}()[][]]","[[][{}]{}[][]]", "[(){}]", "(){}"};
 
 
         System.out.println("------ Valid Test Cases ------");
@@ -45,6 +45,7 @@ public class Main {
         for (int i = 0; i < goodTestCases.length; i++) {
             if (!b.isValidBracketInput(goodTestCases[i])) {
                 System.out.println("ERROR: Error in Testcase #" + (i+1));
+                System.exit(1);
             }
         }
 
@@ -57,6 +58,7 @@ public class Main {
         for (int i = 0; i < badTestCases.length; i++) {
             if (b.isValidBracketInput(badTestCases[i])) {
                 System.out.println("ERROR: Error in Testcase #" + (i+1));
+                System.exit(1);
             }
 
         }
