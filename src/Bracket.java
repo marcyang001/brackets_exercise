@@ -1,3 +1,9 @@
+/**
+ * Created by marcyang on 2017-08-22.
+ *
+ * This is the Bracket object. It tells whether a given string input is valid or invalid.
+ *
+ */
 
 import java.util.*;
 

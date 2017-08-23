@@ -1,6 +1,11 @@
 /**
  * Created by marcyang on 2017-08-22.
+ *
+ * This is a thread that launches the Bracket object and does isValidBracketInput computation
+ *
  */
+
+
 public class WorkerThread implements Runnable {
 
 

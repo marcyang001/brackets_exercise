@@ -1,3 +1,13 @@
+/**
+ * Created by marcyang on 2017-08-22.
+ *
+ * This is the main program that runs tests
+ *
+ */
+
+
+
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,7 +26,7 @@ public class Main {
 //        PartIOfTheProgram(args);
 //
 /*        Part 2*/
-//        partIIOfTheProgram(args);
+        partIIOfTheProgram(args);
 
 
     }
