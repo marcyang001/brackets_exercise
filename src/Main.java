@@ -9,13 +9,13 @@ public class Main {
 
     public static void main(String[] args) {
 
-//        Part0
+/*        Part0*/
 //        RunSimpleTests();
 //
-//        Part 1
+/*        Part 1*/
 //        PartIOfTheProgram(args);
 //
-//        Part 2
+/*        Part 2*/
 //        partIIOfTheProgram(args);
 
 

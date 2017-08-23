@@ -5,14 +5,14 @@ import java.util.*;
 public class Bracket {
 
 
-    private HashSet openBraces;
-    private HashSet closeBraces;
+    private HashSet<String> openBraces;
+    private HashSet<String> closeBraces;
 
     public Bracket() {
 
-        openBraces = new HashSet();
+        openBraces = new HashSet<>();
 
-        closeBraces = new HashSet();
+        closeBraces = new HashSet<>();
 
         openBraces.add("(");
         openBraces.add("{");
@@ -24,17 +24,31 @@ public class Bracket {
 
     }
 
-    private void insertSquareStack() {
+    /*
+    * Private helper function that inserts the type of the symbols into squareStack
+    *
+    * in order to keep track of what type of symbol is inserted inside a square bracket.
+    *
+    * */
+    private void insertSquareStack(String currentBrace, String inputBraces, int index, Stack<String> squareStack) {
 
+        if (currentBrace.equals("[") && (index + 1) < inputBraces.length()) {
+            String nextBrace = Character.toString(inputBraces.charAt(index+1));
+
+            if (!nextBrace.equals("]")) {
+                squareStack.push(nextBrace);
+            }
+
+        }
     }
 
     public boolean isValidBracketInput(String inputBraces) {
 
         String currentBrace;    // variable that keeps track of each character from the input as we iterate
         String openBrace; // variable that keeps track of the open braces inside the stack
-        String startingBrace; // variable that keeps track of the starting point, either (, [ or {
-        Stack stack = new Stack(); // keep track of the number of open brackets == number of closing brackets
-        Stack squareStack = new Stack(); // keep track of which bracket is inserted inside the square bracket
+        String startingChar; // variable that keeps track of the starting point, either (, [ or {
+        Stack<String> stack = new Stack<>(); // keep track of the number of open brackets == number of closing brackets
+        Stack<String> squareStack = new Stack<>(); // keep track of which bracket is inserted inside the square bracket
 
         int index = 0;
 
@@ -45,20 +59,15 @@ public class Bracket {
 
         currentBrace = Character.toString(inputBraces.charAt(index));
 
-        //Each type of bracket needs to be first opened then closed
+        // Each type of bracket needs to be first opened then closed
         if (openBraces.contains(currentBrace)) {
 
-            if (currentBrace.equals("[") && (index + 1) < inputBraces.length()) {
-                String nextBrace = Character.toString(inputBraces.charAt(index+1));
 
-                if (!nextBrace.equals("]")) {
-                    squareStack.push(nextBrace);
-                }
+            insertSquareStack(currentBrace, inputBraces, index, squareStack);
 
-            }
-
+            // insert the first open brace
             stack.push(currentBrace);
-            startingBrace = currentBrace;
+            startingChar = currentBrace;
             index++;
 
             while (index < inputBraces.length()) {
@@ -68,7 +77,7 @@ public class Bracket {
                 if (openBraces.contains(currentBrace)) {
 
                     if (!stack.empty()) {
-                        openBrace = (String) stack.peek();
+                        openBrace = stack.peek();
                         // Inside parenthesis () only braces {} are allowed
                         if (openBrace.equals("(") && !currentBrace.equals("{")) {
                             return false;
@@ -85,6 +94,9 @@ public class Bracket {
 
                         }
                         else if (openBrace.equals("[") && squareStack.empty()) {
+                            // insert an open square bracket in to squareStack because,
+                            // the program will remove it when encountering its corresponding closing square bracket
+
                             squareStack.push("[");
                             if (!(currentBrace.equals(squareStack.peek()))) {
                                 return false;
@@ -94,20 +106,11 @@ public class Bracket {
 
                     }
                     // (){}
-                    else if (stack.empty() && !startingBrace.equals(currentBrace)){
+                    else if (stack.empty() && !startingChar.equals(currentBrace)){
                         return false;
                     }
 
-
-                    if (currentBrace.equals("[") && (index + 1) < inputBraces.length()) {
-
-                        String nextBrace = Character.toString(inputBraces.charAt(index+1));
-
-                        if (!nextBrace.equals("]")) {
-                            squareStack.push(nextBrace);
-                        }
-
-                    }
+                    insertSquareStack(currentBrace, inputBraces, index, squareStack);
 
                     stack.push(currentBrace);
                 }
@@ -115,18 +118,21 @@ public class Bracket {
                 else if (closeBraces.contains(currentBrace)) {
 
                     if (!stack.empty()){
-                        openBrace = (String) stack.pop();
+                        openBrace = stack.pop();
                         // You can only close the last bracket that was opened
-                        // ()
+                        // valid: ()
+                        // invalid: (]
                         if (openBrace.equals("(") && !currentBrace.equals(")")) {
                             return false;
                         }
-                        // {}
+                        // valid: {}
+                        // invalid: {]
                         else if (openBrace.equals("{") && !currentBrace.equals("}")) {
                             return false;
                         }
 
-                        // []
+                        // valid: []
+                        // invalid: [}
                         else if (openBrace.equals("[") && !currentBrace.equals("]")) {
                             return false;
                         }
@@ -135,15 +141,14 @@ public class Bracket {
                             squareStack.pop();
                         }
                     }
-                    // Each type of bracket needs to be  rst opened then closed
+                    // Each type of bracket needs to be opened first then closed
+                    // invalid: {}]
                     else {
                         return false;
                     }
 
-
-
                 }
-                // Any other characters than (){}[] will invalidate the string
+                // Any characters other than (){}[] will invalidate the string
                 else {
                     return false;
                 }
